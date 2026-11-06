@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { font-family: 'Inter', sans-serif; color: #321c04; background: #f6e4cf; font-synthesis: none; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; overflow-x: clip; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid #e6a54c; outline-offset: 4px; }
+.feature-background { background-image: linear-gradient(rgba(18,20,18,.42),rgba(18,20,18,.55)), url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260709_082449_46df5cc4-ad98-4541-9236-a2659c1478a4.png&w=1920&q=85'); background-size:cover; background-position:center; background-attachment:fixed; }
+@media (max-width: 1023px) { .feature-background { background-attachment:scroll; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+.serif {font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+.work-placeholder {background:linear-gradient(155deg,#6f746a,#343d37 58%,#1e2824)}
