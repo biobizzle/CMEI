@@ -7,8 +7,23 @@ html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; overflow-x: clip; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid #e6a54c; outline-offset: 4px; }
-.feature-background { background-image: linear-gradient(rgba(18,20,18,.42),rgba(18,20,18,.55)), url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260709_082449_46df5cc4-ad98-4541-9236-a2659c1478a4.png&w=1920&q=85'); background-size:cover; background-position:center; background-attachment:fixed; }
+.feature-background { background-image:linear-gradient(140deg,#363126,#17201b); background-size:cover; background-position:center; }
 @media (max-width: 1023px) { .feature-background { background-attachment:scroll; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; } }
 .serif {font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
 .work-placeholder {background:linear-gradient(155deg,#6f746a,#343d37 58%,#1e2824)}
+.feature-background { background-image: linear-gradient(140deg, #363126, #17201b); }
+.work-one { background: linear-gradient(0deg,rgba(20,24,20,.74),rgba(20,24,20,.08) 65%),url('/images/story.webp') center/cover; }
+.work-two { background: linear-gradient(0deg,rgba(20,24,20,.74),rgba(20,24,20,.08) 65%),url('/images/path.webp') center/cover; }
+.people-window { overflow-x:auto; scrollbar-width:none; mask-image:linear-gradient(to right, transparent, black 3%, black 97%, transparent); }
+.people-window::-webkit-scrollbar { display:none; }
+.people-track { display:flex; width:max-content; animation: people-move 42s linear infinite; }
+.people-group { display:flex; flex-shrink:0; gap:20px; padding-right:20px; }
+.people-card { width:270px; flex-shrink:0; }
+.people-photo { aspect-ratio:4/5; overflow:hidden; border-radius:20px; background:#ddc8b1; }
+.people-photo img { width:100%; height:100%; object-fit:cover; object-position:center 25%; transition:transform .7s cubic-bezier(.22,1,.36,1),filter .7s ease; }
+.people-card:hover img { transform:scale(1.055); filter:saturate(1.05); }
+.people-window:hover .people-track,.people-window:focus-within .people-track,.people-track.is-paused { animation-play-state:paused; }
+@keyframes people-move { to { transform:translateX(-50%); } }
+@media(max-width:639px) { .people-card { width:220px; } .people-track { animation-duration:48s; } }
+@media(prefers-reduced-motion:reduce) { .people-track { animation:none; } .people-window { overflow-x:auto; mask-image:none; } .people-group[aria-hidden="true"] { display:none; } }
