@@ -15,11 +15,11 @@ const titles:Record<string,string>={'/':'CMEI | Create. Capture. Inspire. Empowe
 function PageIntro({eyebrow,title,description}:{eyebrow:string,title:string,description:string}){return <section className="bg-[#f6e4cf] px-6 pb-16 pt-16 text-[#321c04] md:pb-24 md:pt-24"><div className="mx-auto max-w-6xl"><p className="mb-6 text-[10px] font-semibold uppercase tracking-[.2em]">{eyebrow}</p><h1 className="max-w-4xl text-5xl leading-[1.04] tracking-tight sm:text-6xl md:text-7xl">{title}</h1><p className="mt-7 max-w-xl text-base leading-relaxed text-[#321c04]/70 md:text-lg">{description}</p></div></section>}
 export default function App(){useEffect(()=>{document.title=titles[path] || 'Page not found | CMEI'},[]);let content;
 switch(path){
-case '/': content=<><Hero/><HomeIntro/><Cohort/></>;break;
+case '/': content=<><Hero/><HomeIntro/><FeaturesSection/><Cohort/><PeopleRail/></>;break;
 case '/about': content=<><PageIntro eyebrow="About CMEI" title="A space to create what comes next." description="We bring creative education, mentorship and hands-on production together for emerging storytellers."/><AboutSection/></>;break;
 case '/approach': content=<><PageIntro eyebrow="What we do" title="Make something meaningful." description="Practical learning, storytelling and professional development come together in our approach."/><FeaturesSection/><Cohort/></>;break;
 case '/work': content=<><Work/></>;break;
-case '/people': content=<><PeopleRail/></>;break;
+case '/people': content=<><PeopleRail pageHeading/></>;break;
 case '/partner': content=<><PageIntro eyebrow="Partner with us" title="Make the next story possible." description="Support emerging creators through mentorship, equipment, venues, funding or creative opportunities. Contact details coming soon."/><Cohort/></>;break;
 default: content=<PageIntro eyebrow="Page not found" title="This page could not be found." description="Use the menu to explore CMEI."/>;
 }
