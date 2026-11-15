@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CalendarDays, Play, Share2, X } from 'lucide-react';
+import { CalendarDays, Pause, Play, Share2, X } from 'lucide-react';
 import './FilmPage.css';
 
 /** Verified campaign details. Do not publish an unconfirmed full-film URL. */
@@ -48,9 +48,13 @@ function addCalendarReminder() {
 export default function FilmPage() {
   const [remaining, setRemaining] = useState(timeLeft);
   const [playBackground, setPlayBackground] = useState(false);
+  const [motionPaused, setMotionPaused] = useState(false);
+  const [teaserOpen, setTeaserOpen] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const [notice, setNotice] = useState('');
   const dialog = useRef<HTMLDialogElement>(null);
   const teaserPlayer = useRef<HTMLVideoElement>(null);
+  const backgroundPlayer = useRef<HTMLVideoElement>(null);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [fullFilmUrl] = useState(THE_DARK_DIDNT_WIN.fullFilmUrl);
   const isAvailable = remaining.released && Boolean(fullFilmUrl);
@@ -70,6 +74,24 @@ export default function FilmPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const video = backgroundPlayer.current;
+    if (!video) return;
+    if (!playBackground || motionPaused || teaserOpen || document.hidden) video.pause();
+    else void video.play().catch(() => setMotionPaused(true));
+  }, [playBackground, motionPaused, teaserOpen]);
+
+  useEffect(() => {
+    const syncVisibility = () => {
+      const video = backgroundPlayer.current;
+      if (!video) return;
+      if (document.hidden || teaserOpen || motionPaused) video.pause();
+      else if (playBackground) void video.play().catch(() => setMotionPaused(true));
+    };
+    document.addEventListener('visibilitychange', syncVisibility);
+    return () => document.removeEventListener('visibilitychange', syncVisibility);
+  }, [teaserOpen, motionPaused, playBackground]);
+
   function announce(value: string) {
     setNotice(value);
     if (noticeTimer.current) window.clearTimeout(noticeTimer.current);
@@ -78,11 +100,13 @@ export default function FilmPage() {
 
   function openTeaser() {
     if (!dialog.current?.open) dialog.current?.showModal();
+    setTeaserOpen(true);
     teaserPlayer.current?.play().catch(() => {});
   }
   function closeTeaser() {
     teaserPlayer.current?.pause();
     dialog.current?.close();
+    setTeaserOpen(false);
   }
   async function shareFilm() {
     const url = `${window.location.origin}${THE_DARK_DIDNT_WIN.path}`;
@@ -106,8 +130,20 @@ export default function FilmPage() {
     <main className="film-page" id="film-top">
       <div className="film-world" aria-hidden="true">
         <div className="film-world-still" />
-        {playBackground && (
-          <video className="film-world-motion" src={THE_DARK_DIDNT_WIN.teaser} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} />
+        {playBackground && !videoError && (
+          <video
+            ref={backgroundPlayer}
+            className="film-world-motion"
+            src={THE_DARK_DIDNT_WIN.teaser}
+            autoPlay muted loop playsInline preload="metadata"
+            aria-hidden="true" tabIndex={-1}
+            onError={() => setVideoError(true)}
+            onTimeUpdate={event => {
+              // The original WhatsApp export includes black outro frames.
+              // Loop the actual footage rather than its closing title cards.
+              if (event.currentTarget.currentTime >= 7.45) event.currentTarget.currentTime = 0;
+            }}
+          />
         )}
         <div className="film-world-veil" />
       </div>
@@ -127,7 +163,16 @@ export default function FilmPage() {
         <section className="film-sheet" aria-labelledby="film-heading">
           <div className="film-sheet-top">
             <p className="film-label">Creddy Production</p>
-            <button type="button" className="film-icon-action" onClick={shareFilm} aria-label="Share this film" title="Share this film"><Share2 size={17} strokeWidth={1.5} aria-hidden="true"/></button>
+            <div className="film-toolgroup">
+              {playBackground && !videoError && (
+                <button type="button" className="film-icon-action" onClick={() => setMotionPaused(paused => !paused)}
+                  aria-label={motionPaused ? 'Play background motion' : 'Pause background motion'}
+                  title={motionPaused ? 'Play background motion' : 'Pause background motion'}>
+                  {motionPaused ? <Play size={16} aria-hidden="true"/> : <Pause size={16} aria-hidden="true"/>}
+                </button>
+              )}
+              <button type="button" className="film-icon-action" onClick={shareFilm} aria-label="Share this film" title="Share this film"><Share2 size={17} strokeWidth={1.5} aria-hidden="true"/></button>
+            </div>
           </div>
 
           <h1 className="film-title" id="film-heading">The Dark <em>Didn't Win</em></h1>
@@ -163,7 +208,7 @@ export default function FilmPage() {
         </section>
       </div>
 
-      <dialog ref={dialog} className="film-dialog" aria-label="The Dark Didn't Win official teaser" onClose={() => teaserPlayer.current?.pause()} onClick={event => { if (event.target === dialog.current) closeTeaser(); }}>
+      <dialog ref={dialog} className="film-dialog" aria-label="The Dark Didn't Win official teaser" onClose={() => { teaserPlayer.current?.pause(); setTeaserOpen(false); }} onClick={event => { if (event.target === dialog.current) closeTeaser(); }}>
         <div className="film-dialog-header"><span>Official teaser</span><button type="button" onClick={closeTeaser} aria-label="Close teaser"><X size={20}/></button></div>
         <video ref={teaserPlayer} controls playsInline preload="none" poster={THE_DARK_DIDNT_WIN.poster}>
           <source src={THE_DARK_DIDNT_WIN.teaser} type="video/mp4"/>
