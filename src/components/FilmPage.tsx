@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { CalendarDays, Pause, Play, Share2, X } from 'lucide-react';
+import { CalendarDays, Play, Share2, X } from 'lucide-react';
 import './FilmPage.css';
 
 /** Verified campaign details. Do not publish an unconfirmed full-film URL. */
@@ -48,7 +48,6 @@ function addCalendarReminder() {
 export default function FilmPage() {
   const [remaining, setRemaining] = useState(timeLeft);
   const [playBackground, setPlayBackground] = useState(false);
-  const [motionPaused, setMotionPaused] = useState(false);
   const [teaserOpen, setTeaserOpen] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [notice, setNotice] = useState('');
@@ -77,20 +76,20 @@ export default function FilmPage() {
   useEffect(() => {
     const video = backgroundPlayer.current;
     if (!video) return;
-    if (!playBackground || motionPaused || teaserOpen || document.hidden) video.pause();
-    else void video.play().catch(() => setMotionPaused(true));
-  }, [playBackground, motionPaused, teaserOpen]);
+    if (!playBackground || teaserOpen || document.hidden) video.pause();
+    else void video.play().catch(() => { /* Autoplay may be blocked; retain the poster fallback. */ });
+  }, [playBackground, teaserOpen]);
 
   useEffect(() => {
     const syncVisibility = () => {
       const video = backgroundPlayer.current;
       if (!video) return;
-      if (document.hidden || teaserOpen || motionPaused) video.pause();
-      else if (playBackground) void video.play().catch(() => setMotionPaused(true));
+      if (document.hidden || teaserOpen || !playBackground) video.pause();
+      else void video.play().catch(() => { /* Leave static artwork visible if autoplay fails. */ });
     };
     document.addEventListener('visibilitychange', syncVisibility);
     return () => document.removeEventListener('visibilitychange', syncVisibility);
-  }, [teaserOpen, motionPaused, playBackground]);
+  }, [teaserOpen, playBackground]);
 
   function announce(value: string) {
     setNotice(value);
@@ -163,16 +162,7 @@ export default function FilmPage() {
         <section className="film-sheet" aria-labelledby="film-heading">
           <div className="film-sheet-top">
             <p className="film-label">Creddy Production</p>
-            <div className="film-toolgroup">
-              {playBackground && !videoError && (
-                <button type="button" className="film-icon-action" onClick={() => setMotionPaused(paused => !paused)}
-                  aria-label={motionPaused ? 'Play background motion' : 'Pause background motion'}
-                  title={motionPaused ? 'Play background motion' : 'Pause background motion'}>
-                  {motionPaused ? <Play size={16} aria-hidden="true"/> : <Pause size={16} aria-hidden="true"/>}
-                </button>
-              )}
-              <button type="button" className="film-icon-action" onClick={shareFilm} aria-label="Share this film" title="Share this film"><Share2 size={17} strokeWidth={1.5} aria-hidden="true"/></button>
-            </div>
+            <button type="button" className="film-icon-action" onClick={shareFilm} aria-label="Share this film" title="Share this film"><Share2 size={17} strokeWidth={1.5} aria-hidden="true"/></button>
           </div>
 
           <h1 className="film-title" id="film-heading">The Dark <em>Didn't Win</em></h1>

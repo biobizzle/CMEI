@@ -100,7 +100,7 @@
 /* The film is one continuous stage, not a poster beside a separate card. */
 @media(min-width:901px){
   .film-key-art{top:50%;left:clamp(12px,2vw,36px);width:min(91vw,1370px);transform:translateY(-50%);}
-  .film-key-art img{mask-image:linear-gradient(90deg,#000 0%,#000 78%,transparent 100%)}
+  .film-key-art img{mask-image:linear-gradient(90deg,#000 0%,#000 43%,rgba(0,0,0,.52) 57%,transparent 79%,transparent 100%)}
   .film-sheet{margin-right:clamp(2px,1.5vw,22px)}
   .film-world-still{filter:blur(13px) brightness(.52) saturate(.7)}
   .film-world-motion{opacity:.25;filter:blur(14px) saturate(.65) brightness(.55)}
@@ -133,20 +133,19 @@
              linear-gradient(0deg,rgba(3,4,4,.45),transparent 32%,transparent 70%,rgba(3,4,4,.4));
 }
 .film-key-art{animation:film-art-alive 17s ease-in-out infinite alternate}
-.film-toolgroup{display:flex;align-items:center;gap:2px}
 .film-icon-action{border:0;background:transparent;min-width:40px;min-height:40px}
 .film-icon-action:hover{background:rgba(255,255,255,.45)}
 @keyframes film-world-breathe{from{transform:scale(1)}to{transform:scale(1.06)}}
 @keyframes film-art-alive{from{transform:translateY(-50%) scale(1)}to{transform:translateY(-50%) scale(1.025)}}
 @media(min-width:901px){
  .film-world-still{filter:blur(4px) brightness(.68) saturate(.84)}
- .film-world-motion{filter:brightness(.82) contrast(1.14) saturate(.89);opacity:.72}
+ .film-world-motion{object-position:52% 45%;filter:brightness(1.03) contrast(1.12) saturate(.93);opacity:.88;mix-blend-mode:normal;transform:scale(1.12);transform-origin:52% 45%}
  .film-key-art{animation:film-art-alive 19s ease-in-out infinite alternate;transform-origin:38% 50%}
 }
 @media(max-width:900px){
  .film-header{background:linear-gradient(180deg,rgba(3,4,4,.53),transparent);height:62px}
  .film-page{height:100svh;overflow:hidden}
- .film-stage{height:100svh;min-height:0;align-items:flex-end;padding:68px 12px max(17px,env(safe-area-inset-bottom))}
+ .film-stage{height:100svh;min-height:0;align-items:flex-end;padding:68px 12px max(78px,calc(env(safe-area-inset-bottom) + 56px))}
  .film-world-still{inset:-3%;background-position:64% center;background-size:cover;filter:brightness(.78) saturate(.93)}
  .film-world-motion{
     inset:auto;left:50%;top:50%;width:100%;height:325svh;
@@ -165,13 +164,13 @@
 @keyframes film-art-mobile-alive{from{transform:scale(1)}to{transform:scale(1.027)}}
 @media(max-width:370px){
  .film-header{height:58px}
- .film-stage{padding:62px 9px max(10px,env(safe-area-inset-bottom))}
+ .film-stage{padding:62px 9px max(60px,calc(env(safe-area-inset-bottom) + 46px))}
  .film-key-art{top:76px}
  .film-sheet{padding:12px 13px 14px}
 }
 @media(max-height:580px) and (max-width:900px){
  .film-page{height:auto;min-height:580px;overflow-y:auto}
- .film-stage{height:580px;min-height:580px}
+ .film-stage{height:580px;min-height:580px;padding-bottom:max(22px,env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){
  .film-world-still,.film-key-art{animation:none!important;transform:none!important}
@@ -185,4 +184,10 @@
   .film-key-art{display:none}
   .film-world-still{background-position:63% center}
   .film-world-motion{opacity:.79}
+}
+
+/* Desktop: bring the active footage into the visible central scene without washing out the poster title. */
+@media (min-width:901px){
+  .film-world-motion{object-position:52% 45%;mix-blend-mode:normal}
+  .film-world-veil{background:linear-gradient(90deg,rgba(3,4,4,.04),rgba(3,4,4,.12) 40%,rgba(3,4,4,.38) 100%)}
 }
