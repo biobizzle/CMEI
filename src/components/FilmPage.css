@@ -177,3 +177,12 @@
  .film-world-still,.film-key-art{animation:none!important;transform:none!important}
  .film-world-motion{display:none!important}
 }
+
+
+/* Mobile is one full-screen moving image, not a landscape poster above a card.
+   The artwork remains intact on desktop and in the film's homepage feature. */
+@media(max-width:900px){
+  .film-key-art{display:none}
+  .film-world-still{background-position:63% center}
+  .film-world-motion{opacity:.79}
+}
