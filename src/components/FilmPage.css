@@ -53,6 +53,9 @@
 .film-dialog video{display:block;width:100%;max-height:78svh;background:#000;object-fit:contain;border-radius:4px}
 .film-toast{position:fixed;bottom:20px;left:50%;z-index:20;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:12px 16px;border-radius:6px;background:#f5f3ed;color:#222;font-size:12px;transition:opacity .2s,transform .2s;white-space:nowrap}
 .film-toast-visible{opacity:1;transform:translate(-50%,0)}
+/* Poster remains visible until optional video is ready; reveal motion without a flash. */
+.film-world-motion{transition:opacity .9s ease}
+.film-world-motion:not([data-ready='true']){opacity:0!important}
 @keyframes film-art-in{from{opacity:0;transform:translateY(calc(-48% + 12px))}to{opacity:1;transform:translateY(-48%)}}
 @keyframes film-panel-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @media(min-width:1600px){.film-key-art{width:900px}}

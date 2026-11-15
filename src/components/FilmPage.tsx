@@ -1,17 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { CalendarDays, Play, Share2, X } from 'lucide-react';
 import './FilmPage.css';
-
-/** Verified campaign details. Do not publish an unconfirmed full-film URL. */
-export const THE_DARK_DIDNT_WIN = {
-  title: "The Dark Didn't Win",
-  producer: 'Creddy Production',
-  premiereISO: '2026-11-20T15:00:00+01:00',
-  path: '/films/the-dark-didnt-win',
-  poster: '/films/the-dark-didnt-win/official-poster.webp',
-  teaser: '/films/the-dark-didnt-win/official-teaser.mp4',
-  fullFilmUrl: '',
-} as const;
+import { THE_DARK_DIDNT_WIN } from './filmCampaign';
 
 const releaseAt = Date.parse(THE_DARK_DIDNT_WIN.premiereISO);
 function timeLeft() {
@@ -24,25 +14,19 @@ function timeLeft() {
   };
 }
 
-function addCalendarReminder() {
-  const eventUrl = `${window.location.origin}${THE_DARK_DIDNT_WIN.path}`;
-  const lines = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//CMEI//Film Release//EN',
-    'BEGIN:VEVENT', 'UID:the-dark-didnt-win-20261120@cmei',
-    'DTSTAMP:20261115T000000Z', 'DTSTART:20261120T140000Z', 'DTEND:20261120T141500Z',
-    "SUMMARY:THE DARK DIDN'T WIN - Online Premiere",
-    `DESCRIPTION:Free online premiere. A Creddy Production.\\n${eventUrl}`,
-    `URL:${eventUrl}`, 'BEGIN:VALARM', 'TRIGGER:-PT30M', 'ACTION:DISPLAY',
-    'DESCRIPTION:The film premieres in 30 minutes', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR',
-  ];
-  const blobUrl = URL.createObjectURL(new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' }));
-  const link = document.createElement('a');
-  link.href = blobUrl;
-  link.download = 'the-dark-didnt-win-premiere.ics';
-  document.body.append(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+/** Opening this pre-filled event does not create it: the visitor must tap Save in Calendar. */
+function calendarReminderUrl() {
+  const eventUrl = new URL(THE_DARK_DIDNT_WIN.path, window.location.origin).toString();
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: "THE DARK DIDN'T WIN | Free online premiere",
+    dates: '20261120T140000Z/20261120T143000Z',
+    stz: 'Africa/Lagos',
+    etz: 'Africa/Lagos',
+    details: `Free online premiere by Creddy Production, Friday 20 November 2026 at 3:00 PM WAT. Watch on CMEI: ${eventUrl}`,
+    location: eventUrl,
+  });
+  return `https://calendar.google.com/calendar/r/eventedit?${params.toString()}`;
 }
 
 export default function FilmPage() {
@@ -50,6 +34,7 @@ export default function FilmPage() {
   const [playBackground, setPlayBackground] = useState(false);
   const [teaserOpen, setTeaserOpen] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const [notice, setNotice] = useState('');
   const dialog = useRef<HTMLDialogElement>(null);
   const teaserPlayer = useRef<HTMLVideoElement>(null);
@@ -62,13 +47,47 @@ export default function FilmPage() {
     document.title = "The Dark Didn't Win | CMEI Films";
     const tick = window.setInterval(() => setRemaining(timeLeft()), 30000);
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const syncMotion = () => setPlayBackground(!motion.matches && !connection?.saveData);
-    syncMotion();
+    type NetworkConnection = EventTarget & { saveData?: boolean; effectiveType?: string };
+    const connection = (navigator as Navigator & { connection?: NetworkConnection }).connection;
+    let delay: ReturnType<typeof setTimeout> | undefined;
+    let idleId: number | undefined;
+    let disposed = false;
+    const cancelPending = () => {
+      if (delay !== undefined) window.clearTimeout(delay);
+      if (idleId !== undefined && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleId);
+      delay = undefined;
+      idleId = undefined;
+    };
+    const syncMotion = () => {
+      cancelPending();
+      const slowConnection = ['slow-2g', '2g'].includes(connection?.effectiveType ?? '');
+      if (motion.matches || connection?.saveData || slowConnection) {
+        setPlayBackground(false);
+        setVideoReady(false);
+        return;
+      }
+      // Render the essential film page first; only mount/download decorative video after idle.
+      delay = window.setTimeout(() => {
+        const loadMotion = () => { if (!disposed) setPlayBackground(true); };
+        if ('requestIdleCallback' in window) {
+          idleId = window.requestIdleCallback(loadMotion, { timeout: 1600 });
+        } else {
+          loadMotion();
+        }
+      }, connection?.effectiveType === '3g' ? 2600 : 750);
+    };
+    const beginAfterLoad = () => syncMotion();
+    if (document.readyState === 'complete') syncMotion();
+    else window.addEventListener('load', beginAfterLoad, { once: true });
     motion.addEventListener?.('change', syncMotion);
+    connection?.addEventListener?.('change', syncMotion);
     return () => {
+      disposed = true;
+      cancelPending();
       window.clearInterval(tick);
+      window.removeEventListener('load', beginAfterLoad);
       motion.removeEventListener?.('change', syncMotion);
+      connection?.removeEventListener?.('change', syncMotion);
       if (noticeTimer.current) window.clearTimeout(noticeTimer.current);
     };
   }, []);
@@ -134,9 +153,11 @@ export default function FilmPage() {
             ref={backgroundPlayer}
             className="film-world-motion"
             src={THE_DARK_DIDNT_WIN.teaser}
-            autoPlay muted loop playsInline preload="metadata"
+            autoPlay muted loop playsInline preload="none"
+            data-ready={videoReady}
             aria-hidden="true" tabIndex={-1}
-            onError={() => setVideoError(true)}
+            onCanPlay={() => setVideoReady(true)}
+            onError={() => { setVideoError(true); setVideoReady(false); }}
             onTimeUpdate={event => {
               // The original WhatsApp export includes black outro frames.
               // Loop the actual footage rather than its closing title cards.
@@ -192,7 +213,7 @@ export default function FilmPage() {
               <button type="button" className="film-primary" onClick={openTeaser}><Play size={15} fill="currentColor" aria-hidden="true" /> Watch teaser</button>
             )}
             {!remaining.released && (
-              <button type="button" className="film-reminder" onClick={() => { addCalendarReminder(); announce('Reminder added to calendar file'); }}><CalendarDays size={16} aria-hidden="true" strokeWidth={1.5} /> Remind me</button>
+              <a className="film-reminder" href={calendarReminderUrl()} target="_blank" rel="noopener noreferrer" aria-label="Set a premiere reminder in Google Calendar. Tap Save to confirm." title="Opens Google Calendar; tap Save to confirm"><CalendarDays size={16} aria-hidden="true" strokeWidth={1.5} /> Set reminder</a>
             )}
           </div>
         </section>

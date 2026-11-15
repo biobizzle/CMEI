@@ -1,9 +1,9 @@
-import {useEffect} from 'react';
+import {lazy, Suspense, useEffect} from 'react';
 import Navbar from './components/Navbar';
 import AboutSection from './components/AboutSection';
 import FeaturesSection from './components/FeaturesSection';
 import PeopleRail from './components/PeopleRail';
-import FilmPage from './components/FilmPage';
+const FilmPage = lazy(() => import('./components/FilmPage'));
 import FeaturedFilm from './components/FeaturedFilm';
 const heroVideo='https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260711_090308_1dd0cea7-f9ba-4db4-8147-c7d746061c9e.mp4';
 function Hero(){return <section className="relative -mb-[25px] flex h-[100svh] min-h-[600px] overflow-hidden bg-[#3d4038] text-white"><video className="absolute inset-0 h-full w-full object-cover" src={heroVideo} autoPlay muted loop playsInline aria-label="Decorative placeholder footage"/><div className="absolute inset-0 bg-black/40"/><div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10"/><Navbar/><div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-end px-5 pb-20 text-center md:pb-24"><p className="mb-6 text-[10px] font-semibold uppercase tracking-[.25em] text-white/80">Creative Media Empowerment Initiative</p><h1 className="text-5xl font-normal leading-[1.05] tracking-tight sm:text-7xl md:text-8xl lg:text-[96px]">Learn the craft.<br/>Tell <em className="not-italic" style={{fontFamily:"'Instrument Serif', serif",fontStyle:'italic'}}>the story.</em></h1><p className="mt-6 max-w-[490px] text-sm font-medium leading-relaxed text-white/85 md:text-base">A space for emerging creators to learn, make meaningful work and build a path forward.</p><div className="mt-8 flex items-center gap-5 rounded-xl bg-black/25 py-1 pl-5 pr-1 backdrop-blur-md"><span className="hidden text-left text-sm font-medium sm:block">Create. Capture. Inspire. Empower.</span><span className="text-left text-xs font-medium sm:hidden">Every story starts somewhere.</span><a href="/about" className="whitespace-nowrap rounded-xl bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-white/90">Discover CMEI</a></div></div></section>}
@@ -24,5 +24,5 @@ case '/films': content=<><PageIntro eyebrow="CMEI Films" title="Stories worth se
 case '/partner': content=<><PageIntro eyebrow="Partner with us" title="Make the next story possible." description="Support emerging creators through mentorship, equipment, venues, funding or creative opportunities."/><Cohort/></>;break;
 default: content=<PageIntro eyebrow="Page not found" title="This page could not be found." description="Use the menu to explore CMEI."/>;
 }
-if(path==='/films/the-dark-didnt-win')return <FilmPage/>;
+if(path==='/films/the-dark-didnt-win')return <Suspense fallback={<main aria-busy="true" aria-label="Loading film page" style={{minHeight:'100svh',background:'#070807'}}/>}><FilmPage/></Suspense>;
 return <main id="top">{path==='/'?null:<div className="relative h-28 bg-[#321c04]"><Navbar/></div>}{content}<ContactFooter/></main>}

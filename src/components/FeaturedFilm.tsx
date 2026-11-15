@@ -1,4 +1,4 @@
-import { THE_DARK_DIDNT_WIN } from './FilmPage';
+import { THE_DARK_DIDNT_WIN } from './filmCampaign';
 
 /** The homepage feature is editorial and secondary to CMEI's existing hero. */
 export default function FeaturedFilm() {
