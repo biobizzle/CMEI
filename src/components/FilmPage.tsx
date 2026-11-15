@@ -55,7 +55,7 @@ export default function FilmPage() {
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    document.title = `${THE_DARK_DIDNT_WIN.title} — CMEI Film Spotlight`;
+    document.title = `${THE_DARK_DIDNT_WIN.title} | CMEI Films`;
     const tick = window.setInterval(() => setCountdown(remainingTime()), 1000);
     return () => window.clearInterval(tick);
   }, []);
@@ -78,7 +78,7 @@ export default function FilmPage() {
     const url = `${window.location.origin}${THE_DARK_DIDNT_WIN.path}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: THE_DARK_DIDNT_WIN.title, text: 'Premieres free online · 20 Nov 2026 · 3 PM WAT', url });
+        await navigator.share({ title: THE_DARK_DIDNT_WIN.title, text: 'Free online premiere on 20 November 2026 at 3:00 PM WAT', url });
         return;
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') return;
@@ -99,9 +99,8 @@ export default function FilmPage() {
       <header className="film-header">
         <a href="/" className="film-brand" aria-label="CMEI homepage">
           <img src="/cmei-mark.png" alt="" width={27} height={27} />
-          <span>CMEI <span className="film-brand-slash">/</span> Films</span>
+          <span>CMEI Films</span>
         </a>
-        <span className="film-header-caption">Independent cinema <span>/</span> Featured release 001</span>
         <a href="/" className="film-back">Back to CMEI</a>
       </header>
 
@@ -116,19 +115,14 @@ export default function FilmPage() {
               width={1672} height={941}
             />
           </div>
-          <figcaption className="film-visual-caption">
-            <span><i aria-hidden="true" /> Official key art</span>
-            <span>Creddy Production <span aria-hidden="true">/</span> 2026</span>
-          </figcaption>
         </figure>
 
         <section className="film-panel" aria-labelledby="film-title">
           <div className="film-panel-head">
-            <p>Featured film <span>·</span> No. 001</p>
+            <p>Featured film</p>
             <button type="button" className="film-icon-button" aria-label="Share film" title="Share film" onClick={shareFilm}><Share2 size={17} strokeWidth={1.5}/></button>
           </div>
           <div className="film-title-block">
-            <p className="film-overline">An independent short film</p>
             <h1 id="film-title">The Dark<br /><em>Didn't Win</em></h1>
             <p className="film-produced">A Creddy Production</p>
           </div>
@@ -163,10 +157,8 @@ export default function FilmPage() {
             )}
             <button className="film-remind" type="button" onClick={() => {saveReminder(); announce('Calendar reminder saved');}}><CalendarDays size={15} strokeWidth={1.6} aria-hidden="true"/> Add reminder</button>
           </div>
-          <div className="film-panel-bottom"><span>By Creddy Production</span><span>Featured on CMEI</span></div>
         </section>
       </div>
-      <footer className="film-footer"><span>THE DARK DIDN'T WIN</span><span>20 / 11 / 2026 <span aria-hidden="true">·</span> 15:00 WAT</span></footer>
       <dialog ref={modal} className="film-dialog" aria-label="The Dark Didn't Win official teaser" onClose={() => player.current?.pause()} onClick={event => {if (event.target === modal.current) closeTeaser();}}>
         <div className="film-dialog-head"><div><small>CREDDY PRODUCTION</small><strong>Official teaser</strong></div><button type="button" onClick={closeTeaser} aria-label="Close teaser"><X size={21}/></button></div>
         <video ref={player} controls playsInline preload="none" poster={THE_DARK_DIDNT_WIN.poster}><source src={THE_DARK_DIDNT_WIN.teaser} type="video/mp4" />Your browser does not support video playback.</video>
