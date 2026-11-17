@@ -1,8 +1,37 @@
 import {Mail, Phone} from 'lucide-react';
 import {contact} from '../content/site';
 
-/** Two distinct contact routes without exposing unlabelled duplicate phone icons. */
-export default function ContactFooter() {
+/** Home preserves the existing editorial footer; internal routes use compact utilities. */
+/** Internal pages use contact and navigation utilities, not the homepage's second marketing hero. */
+function CompactFooter() {
+  return <footer id="contact" className="bg-[#f6e4cf] px-5 py-7 text-[#321c04] md:px-6 md:py-10">
+    <div className="mx-auto max-w-6xl border-t border-[#321c04]/20 pt-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <a href="/" className="inline-flex items-center gap-2.5" aria-label="CMEI home">
+          <img src="/cmei-mark.png" alt="" width={42} height={34} className="h-[34px] w-[42px] object-contain" loading="lazy"/>
+          <span className="text-base font-semibold tracking-[-.05em]">CMEI.</span>
+        </a>
+        <div className="flex items-center gap-2.5" aria-label="Contact CMEI">
+          <a href={'mailto:'+contact.email} title={'Email '+contact.email} aria-label={'Email CMEI at '+contact.email} className="grid h-11 w-11 place-items-center rounded-full border border-[#321c04]/25 transition-colors hover:bg-[#321c04]/10"><Mail size={18} aria-hidden="true"/></a>
+          <details className="group relative">
+            <summary aria-label="Choose a CMEI phone number" title="Call CMEI" className="grid h-11 w-11 cursor-pointer list-none place-items-center rounded-full border border-[#321c04]/25 transition-colors hover:bg-[#321c04]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden"><Phone size={18} aria-hidden="true"/></summary>
+            <div className="absolute bottom-[calc(100%+8px)] right-0 z-20 w-48 rounded-xl border border-[#321c04]/15 bg-[#fff9f2] p-2 shadow-lg">
+              {contact.phoneNumbers.map(phone=><a key={phone.href} href={phone.href} className="block rounded-lg px-3 py-3 text-sm hover:bg-[#321c04]/10">{phone.display}</a>)}
+            </div>
+          </details>
+        </div>
+      </div>
+      <nav aria-label="Footer" className="mt-5 flex flex-wrap gap-x-5 gap-y-3 border-t border-[#321c04]/15 pt-5 text-xs text-[#321c04]/75">
+        <a href="/about">About</a><a href="/approach">What we do</a><a href="/work">Work</a><a href="/films">Films</a><a href="/partner">Partner</a><a href="#top">Back to top</a>
+      </nav>
+      <p className="mt-5 text-[11px] text-[#321c04]/55">© {new Date().getFullYear()} Creative Media Empowerment Initiative</p>
+    </div>
+  </footer>;
+}
+
+
+export default function ContactFooter({variant='full'}:{variant?:'full'|'compact'}) {
+  if(variant==='compact') return <CompactFooter/>;
   return (
     <section id="contact" className="bg-[#f6e4cf] px-5 pt-14 text-[#321c04] md:px-6 md:pt-20">
       <div className="mx-auto max-w-6xl">

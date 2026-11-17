@@ -6,7 +6,7 @@
   },
   "/about": {
     "title": "About CMEI | Creative Media Empowerment Initiative",
-    "description": "Learn about CMEI and our commitment to creative education, mentorship and meaningful storytelling.",
+    "description": "Learn why Creative Media Empowerment Initiative exists, its practice-first pathway, mission, vision, values and people.",
     "image": "/cmei-logo.png"
   },
   "/approach": {
@@ -16,7 +16,7 @@
   },
   "/work": {
     "title": "Our Work | CMEI",
-    "description": "Explore films and creative work associated with the CMEI community.",
+    "description": "Explore attributed creative work associated with CMEI, including The Dark Didn't Win, a Creddy Production.",
     "image": "/films/the-dark-didnt-win/official-poster.webp"
   },
   "/films": {
@@ -26,7 +26,7 @@
   },
   "/partner": {
     "title": "Partner with CMEI | Support Emerging Creatives",
-    "description": "Partner with CMEI through mentorship, equipment, venues, funding and creative opportunities.",
+    "description": "Partner with CMEI to support accessible creative-media training, equipment, mentorship and pathways to opportunity.",
     "image": "/cmei-logo.png"
   },
   "/films/the-dark-didnt-win": {

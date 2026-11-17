@@ -34,5 +34,5 @@ export default function App(){
     return <Suspense fallback={<main aria-busy="true" aria-label="Loading film page" style={{minHeight:'100svh',background:'#070807'}}/>}><FilmPage/></Suspense>;
   }
   const Page=pages[path]??NotFoundPage;
-  return <main id="top">{path==='/'?null:<div className="relative h-28 bg-[#321c04]"><Navbar/></div>}<Page/><ContactFooter/></main>;
+  return <main id="top">{path==='/'?null:<div className="relative h-24 bg-[#321c04]"><Navbar/></div>}<Page/><ContactFooter variant={path==='/'?'full':'compact'}/></main>;
 }
