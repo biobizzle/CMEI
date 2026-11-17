@@ -1,14 +1,14 @@
 import { THE_DARK_DIDNT_WIN, getPremiereDisplay } from './filmCampaign';
 
 /** The homepage feature is editorial and secondary to CMEI's existing hero. */
-export default function FeaturedFilm() {
+export default function FeaturedFilm({showCollectionLink=true}:{showCollectionLink?:boolean}) {
   const premiere = getPremiereDisplay();
   return (
     <section className="bg-[#f6e4cf] px-5 py-12 text-[#321c04] md:px-6 md:py-16" aria-labelledby="featured-film-heading">
       <div className="mx-auto max-w-6xl">
         <div className="mb-5 flex items-center justify-between gap-3">
           <p className="text-[10px] font-semibold uppercase tracking-[.2em]">Film spotlight</p>
-          <a href="/films" className="text-xs font-medium underline underline-offset-4">View films</a>
+          {showCollectionLink&&<a href="/films" className="text-xs font-medium underline underline-offset-4">View films</a>}
         </div>
         <a href={THE_DARK_DIDNT_WIN.path} className="group grid overflow-hidden rounded-[10px] bg-[#10110f] text-[#f7f4ef] md:grid-cols-[minmax(0,1.6fr)_minmax(270px,.8fr)]" aria-label="Explore The Dark Didn't Win — a Creddy Production">
           <div className="flex items-center bg-[#090909]">
