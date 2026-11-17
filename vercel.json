@@ -1,3 +1,32 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/about",
+      "destination": "/generated-entries/about.html"
+    },
+    {
+      "source": "/approach",
+      "destination": "/generated-entries/approach.html"
+    },
+    {
+      "source": "/work",
+      "destination": "/generated-entries/work.html"
+    },
+    {
+      "source": "/partner",
+      "destination": "/generated-entries/partner.html"
+    },
+    {
+      "source": "/films",
+      "destination": "/generated-entries/films.html"
+    },
+    {
+      "source": "/films/the-dark-didnt-win",
+      "destination": "/generated-entries/the-dark-didnt-win.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }

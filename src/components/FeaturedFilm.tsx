@@ -1,7 +1,8 @@
-import { THE_DARK_DIDNT_WIN } from './filmCampaign';
+import { THE_DARK_DIDNT_WIN, getPremiereDisplay } from './filmCampaign';
 
 /** The homepage feature is editorial and secondary to CMEI's existing hero. */
 export default function FeaturedFilm() {
+  const premiere = getPremiereDisplay();
   return (
     <section className="bg-[#f6e4cf] px-5 py-12 text-[#321c04] md:px-6 md:py-16" aria-labelledby="featured-film-heading">
       <div className="mx-auto max-w-6xl">
@@ -17,7 +18,7 @@ export default function FeaturedFilm() {
             <p className="text-[10px] font-medium uppercase tracking-[.18em] text-[#d0bfa9]">A Creddy Production</p>
             <div>
               <h2 id="featured-film-heading" className="font-serif text-[33px] leading-[1.05] tracking-[-.035em] md:text-[39px]">The Dark<br /><em>Didn't Win</em></h2>
-              <p className="mt-3 text-xs text-white/70">20 November 2026 at 3 PM WAT</p>
+              <p className="mt-3 text-xs text-white/70">{premiere.day} at {premiere.time}</p>
             </div>
             <span className="inline-flex w-fit border-b border-[#c6a67e] pb-1 text-xs font-semibold tracking-[.025em] transition-colors group-hover:text-[#d9b887]">Explore film</span>
           </div>
