@@ -16,8 +16,8 @@ function PageIntro({eyebrow,title,description}:IntroProps) {
   </header>;
 }
 export function AboutPage(){return <AboutSection/>;}
-export function ApproachPage(){return <><PageIntro eyebrow="What we do" title="Make something meaningful." description="A practical pathway from craft and story to portfolio and opportunity."/><FeaturesSection/><Cohort/></>;}
+export function ApproachPage(){return <><PageIntro eyebrow="What we do" title="Make something meaningful." description="Learn photography, filmmaking and storytelling through hands-on practice."/><FeaturesSection/><Cohort/></>;}
 export function WorkPage(){return <WorkPortfolio/>;}
 export function PartnerPage(){return <PartnerContent/>;}
-export function FilmsPage(){return <><PageIntro eyebrow="CMEI Films" title="Stories worth seeing." description="Independent films and creative work connected to our community."/><FeaturedFilm showCollectionLink={false}/></>;}
+export function FilmsPage(){return <><PageIntro eyebrow="CMEI Films" title="Stories worth seeing." description="Watch films by creators connected to CMEI."/><FeaturedFilm showCollectionLink={false}/></>;}
 export function NotFoundPage(){return <PageIntro eyebrow="Page not found" title="This page could not be found." description="Explore CMEI using the menu."/>;}

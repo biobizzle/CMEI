@@ -6,8 +6,8 @@ export default function WorkPortfolio() {
     <section className="px-5 pb-10 pt-11 md:px-6 md:pb-14 md:pt-20">
       <div className="mx-auto max-w-6xl">
         <p className="mb-5 text-[10px] font-semibold uppercase tracking-[.2em]">Selected work</p>
-        <h1 className="max-w-4xl text-[clamp(2.55rem,6vw,5.2rem)] leading-[1.05] tracking-[-.045em]">Creative work with a <span className="serif">story behind it.</span></h1>
-        <p className="mt-6 max-w-2xl text-[15px] leading-[1.75] text-[#321c04]/75 md:text-lg">A place for credited productions, creative collaborations and, as CMEI programmes develop, assessed learner projects. Work is published with its creator and context clearly identified.</p>
+        <h1 className="max-w-4xl text-[clamp(2.55rem,6vw,5.2rem)] leading-[1.05] tracking-[-.045em]">Stories worth <span className="serif">sharing.</span></h1>
+        <p className="mt-6 max-w-2xl text-[15px] leading-[1.75] text-[#321c04]/75 md:text-lg">Films and creative work connected to CMEI belong here. As our programmes grow, we'll also share projects made by learners, with their names and permission.</p>
       </div>
     </section>
     <section aria-labelledby="selected-film" className="px-5 pb-12 md:px-6 md:pb-20">
@@ -17,9 +17,9 @@ export default function WorkPortfolio() {
         </a>
         <div className="flex flex-col justify-between gap-7 p-6 md:p-9">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[.18em] text-[#ead0ac]">Featured independent production</p>
+            <p className="text-[10px] font-medium uppercase tracking-[.18em] text-[#ead0ac]">Featured film</p>
             <h2 id="selected-film" className="mt-5 font-serif text-[clamp(2.3rem,4vw,3.6rem)] leading-[1.05] tracking-[-.04em]">The Dark<br/><em>Didn't Win</em></h2>
-            <p className="mt-5 text-sm leading-[1.65] text-white/75">Produced by Creddy Production. A short film by the convener of CMEI, featured here as associated creative work.</p>
+            <p className="mt-5 text-sm leading-[1.65] text-white/75">A Creddy Production by the convener of CMEI.</p>
             <p className="mt-4 text-xs text-white/60">Online release: {release.day} · {release.time}</p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -31,8 +31,8 @@ export default function WorkPortfolio() {
     </section>
     <section className="border-t border-[#321c04]/15 px-5 py-9 md:px-6 md:py-12" aria-labelledby="work-standard">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-10">
-        <h2 id="work-standard" className="text-xl leading-tight tracking-tight md:text-2xl">Stories with credit and context.</h2>
-        <p className="max-w-xl text-sm leading-[1.7] text-[#321c04]/75">As CMEI's practical programmes take shape, participant work will appear here only with appropriate permission, creator credits and verified project details.</p>
+        <h2 id="work-standard" className="text-xl leading-tight tracking-tight md:text-2xl">Every story has a maker.</h2>
+        <p className="max-w-xl text-sm leading-[1.7] text-[#321c04]/75">We'll share work made by learners when it's ready, always with their permission and proper credit.</p>
       </div>
     </section>
   </div>;
