@@ -4,9 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "dev": "node scripts/generate-pages.mjs && vite --host 0.0.0.0",
+    "build": "node scripts/generate-pages.mjs && npm test && tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --experimental-strip-types --test tests/*.test.mts",
+    "pretest": "node scripts/generate-pages.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

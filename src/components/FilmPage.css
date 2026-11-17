@@ -194,3 +194,7 @@
   .film-world-motion{object-position:52% 45%;mix-blend-mode:normal}
   .film-world-veil{background:linear-gradient(90deg,rgba(3,4,4,.04),rgba(3,4,4,.12) 40%,rgba(3,4,4,.38) 100%)}
 }
+
+/* Embedded full film is mounted only on demand; the existing film layout is unchanged. */
+.film-embedded-player{display:block;width:100%;aspect-ratio:16/9;min-height:260px;max-height:78svh;border:0;background:#000}
+@media(max-width:639px){.film-embedded-player{min-height:0}}

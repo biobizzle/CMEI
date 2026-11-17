@@ -1,11 +1,69 @@
-import {useEffect,useRef,useState} from 'react';
-const features=[
- {title:'Learn the craft',description:'Build practical skills in photography, video, lighting, editing and digital content through hands-on learning and guidance.',image:'/images/learn.webp',alt:'Concept image of a photographer learning with a mentor'},
- {title:'Tell the story',description:'Explore visual storytelling and make work grounded in real people, places and ideas, with care and consent.',image:'/images/story.webp',alt:'Concept image of a filmmaker recording a conversation'},
- {title:'Build your path',description:'Develop a portfolio, learn professional practice and connect with mentors and a community of emerging creators.',image:'/images/path.webp',alt:'Concept image of creatives reviewing a portfolio together'}
-];
-export default function FeaturesSection(){
- const [active,setActive]=useState(0);const [shown,setShown]=useState<number[]>([]);const refs=useRef<(HTMLElement|null)[]>([]);
- useEffect(()=>{const reveal=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const i=Number((e.target as HTMLElement).dataset.index);setShown(s=>s.includes(i)?s:[...s,i]);reveal.unobserve(e.target)}}),{threshold:.1});const highlight=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)setActive(Number((e.target as HTMLElement).dataset.index))}),{threshold:.5});refs.current.forEach(el=>{if(el){reveal.observe(el);highlight.observe(el)}});return()=>{reveal.disconnect();highlight.disconnect()}},[]);
- return <section id="approach" className="feature-background relative isolate bg-[#252720] px-5 py-20 text-white md:px-10 lg:px-16 lg:py-0"><div className="mx-auto grid max-w-[1300px] gap-10 lg:grid-cols-[360px_1fr] lg:gap-20 xl:gap-32"><div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:max-h-[720px] lg:flex-col lg:justify-between lg:py-24"><div><p className="mb-5 text-[10px] font-semibold uppercase tracking-[.2em] text-white/70">Our approach</p><h2 className="max-w-md text-3xl leading-[1.15] tracking-tight sm:text-4xl lg:text-[42px]">A creative journey, from first idea to work that speaks.</h2></div><div className="mt-8 hidden flex-col items-start gap-2 lg:flex">{features.map((item,i)=><button key={item.title} onClick={()=>refs.current[i]?.scrollIntoView({behavior:'smooth',block:'center'})} className={`rounded-full bg-black/20 px-5 py-3 text-sm transition ${active===i?'text-white':'text-white/50 hover:text-white'}`}>{item.title}</button>)}</div><a href="/partner" className="mt-8 hidden items-center gap-4 text-sm text-white/80 lg:flex">Let's create more opportunity</a></div><div className="flex flex-col gap-5 lg:py-24">{features.map((f,i)=><article key={f.title} data-index={i} ref={el=>{refs.current[i]=el}} className={`rounded-3xl bg-black/25 p-5 backdrop-blur-sm transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:opacity-100 md:p-7 ${shown.includes(i)?'translate-x-0 opacity-100':'translate-x-8 opacity-0'}`}><h3 className="mb-4 text-xl font-medium md:text-2xl">{f.title}</h3><div className="aspect-[16/9] overflow-hidden rounded-2xl bg-[#66584c]"><img className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.035]" src={f.image} alt={f.alt} loading="lazy"/></div><p className="mt-4 max-w-lg text-sm font-medium leading-relaxed text-white/75 md:text-base">{f.description}</p></article>)}</div></div></section>
+import { useEffect, useRef, useState } from 'react';
+import { features } from '../content/site';
+
+/** Keep the approved desktop storytelling layout; compress only the mobile cards. */
+export default function FeaturesSection() {
+  const [active, setActive] = useState(0);
+  const [shown, setShown] = useState<number[]>([]);
+  const refs = useRef<(HTMLElement | null)[]>([]);
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') {
+      setShown(features.map((_, index) => index));
+      return;
+    }
+    const reveal = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const index = Number((entry.target as HTMLElement).dataset.index);
+        setShown(current => current.includes(index) ? current : [...current, index]);
+        reveal.unobserve(entry.target);
+      }
+    }, { threshold: 0.1 });
+    const highlight = new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting) setActive(Number((entry.target as HTMLElement).dataset.index));
+    }, { threshold: 0.5 });
+    for (const node of refs.current) if (node) { reveal.observe(node); highlight.observe(node); }
+    return () => { reveal.disconnect(); highlight.disconnect(); };
+  }, []);
+
+  return (
+    <section id="approach" className="feature-background relative isolate bg-[#252720] px-5 py-12 text-white md:px-10 lg:px-16 lg:py-0">
+      <div className="mx-auto grid max-w-[1300px] gap-7 lg:grid-cols-[360px_1fr] lg:gap-20 xl:gap-32">
+        <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:max-h-[720px] lg:flex-col lg:justify-between lg:py-24">
+          <div>
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[.2em] text-white/70 lg:mb-5">Our approach</p>
+            <h2 className="max-w-md text-3xl leading-[1.15] tracking-tight sm:text-4xl lg:text-[42px]">
+              <span className="lg:hidden">What we do.</span>
+              <span className="hidden lg:inline">A creative journey, from first idea to work that speaks.</span>
+            </h2>
+          </div>
+          <div className="mt-8 hidden flex-col items-start gap-2 lg:flex">
+            {features.map((item, index) => (
+              <button key={item.title} type="button" onClick={() => refs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className={active === index ? 'rounded-full bg-black/20 px-5 py-3 text-sm text-white' : 'rounded-full bg-black/20 px-5 py-3 text-sm text-white/50 transition hover:text-white'}>
+                {item.title}
+              </button>
+            ))}
+          </div>
+          <a href="/partner" className="mt-8 hidden items-center text-sm text-white/80 lg:flex">Partner with CMEI</a>
+        </div>
+        <div className="grid gap-3 lg:flex lg:flex-col lg:gap-5 lg:py-24">
+          {features.map((feature, index) => (
+            <article
+              key={feature.title}
+              data-index={index}
+              ref={node => { refs.current[index] = node; }}
+              className={'grid grid-cols-[104px_minmax(0,1fr)] grid-rows-[auto_auto] gap-x-4 gap-y-1 rounded-2xl bg-black/25 p-3 backdrop-blur-sm transition-all duration-700 ease-out motion-reduce:transform-none motion-reduce:opacity-100 lg:flex lg:flex-col lg:rounded-3xl lg:p-5 xl:p-7 ' +
+                (shown.includes(index) ? 'lg:translate-x-0 lg:opacity-100' : 'lg:translate-x-8 lg:opacity-0')}
+            >
+              <h3 className="col-start-2 row-start-1 self-end text-base font-medium leading-snug lg:order-1 lg:mb-0 lg:text-xl xl:text-2xl">{feature.title}</h3>
+              <div className="col-start-1 row-span-2 row-start-1 aspect-square overflow-hidden rounded-xl bg-[#66584c] lg:order-2 lg:mt-4 lg:aspect-[16/9] lg:rounded-2xl">
+                <img className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.035]" src={feature.image} alt={feature.alt} loading="lazy" decoding="async" width={800} height={450}/>
+              </div>
+              <p className="col-start-2 row-start-2 self-start text-[13px] leading-[1.4] text-white/75 lg:order-3 lg:mt-4 lg:max-w-lg lg:text-sm lg:font-medium lg:leading-relaxed xl:text-base">{feature.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }

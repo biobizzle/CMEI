@@ -1,51 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
 import { CalendarDays, Play, Share2, X } from 'lucide-react';
 import './FilmPage.css';
-import { THE_DARK_DIDNT_WIN } from './filmCampaign';
-
-const releaseAt = Date.parse(THE_DARK_DIDNT_WIN.premiereISO);
-function timeLeft() {
-  const minutes = Math.max(0, Math.ceil((releaseAt - Date.now()) / 60000));
-  return {
-    released: minutes === 0,
-    days: Math.floor(minutes / 1440),
-    hours: Math.floor((minutes % 1440) / 60),
-    minutes: minutes % 60,
-  };
-}
-
-/** Opening this pre-filled event does not create it: the visitor must tap Save in Calendar. */
-function calendarReminderUrl() {
-  const eventUrl = new URL(THE_DARK_DIDNT_WIN.path, window.location.origin).toString();
-  const params = new URLSearchParams({
-    action: 'TEMPLATE',
-    text: "THE DARK DIDN'T WIN | Free online premiere",
-    dates: '20261120T140000Z/20261120T143000Z',
-    stz: 'Africa/Lagos',
-    etz: 'Africa/Lagos',
-    details: `Free online premiere by Creddy Production, Friday 20 November 2026 at 3:00 PM WAT. Watch on CMEI: ${eventUrl}`,
-    location: eventUrl,
-  });
-  return `https://calendar.google.com/calendar/r/eventedit?${params.toString()}`;
-}
+import { THE_DARK_DIDNT_WIN, getFilmCountdown, getFilmPhase, getPremiereDisplay, createCalendarReminderUrl, getYouTubeEmbedUrl } from './filmCampaign';
 
 export default function FilmPage() {
-  const [remaining, setRemaining] = useState(timeLeft);
+  const [remaining, setRemaining] = useState(getFilmCountdown);
+  const phase = getFilmPhase();
+  const premiere = getPremiereDisplay();
   const [playBackground, setPlayBackground] = useState(false);
   const [teaserOpen, setTeaserOpen] = useState(false);
+  const [fullFilmOpen, setFullFilmOpen] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const [notice, setNotice] = useState('');
   const dialog = useRef<HTMLDialogElement>(null);
+  const fullFilmDialog = useRef<HTMLDialogElement>(null);
   const teaserPlayer = useRef<HTMLVideoElement>(null);
   const backgroundPlayer = useRef<HTMLVideoElement>(null);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [fullFilmUrl] = useState(THE_DARK_DIDNT_WIN.fullFilmUrl);
-  const isAvailable = remaining.released && Boolean(fullFilmUrl);
+  const fullFilmUrl = THE_DARK_DIDNT_WIN.fullFilmUrl as string;
+  const embeddedFilmUrl = getYouTubeEmbedUrl(fullFilmUrl);
+  const isAvailable = phase === 'available';
 
   useEffect(() => {
     document.title = "The Dark Didn't Win | CMEI Films";
-    const tick = window.setInterval(() => setRemaining(timeLeft()), 30000);
+    const tick = window.setInterval(() => setRemaining(getFilmCountdown()), 30000);
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     type NetworkConnection = EventTarget & { saveData?: boolean; effectiveType?: string };
     const connection = (navigator as Navigator & { connection?: NetworkConnection }).connection;
@@ -95,20 +74,20 @@ export default function FilmPage() {
   useEffect(() => {
     const video = backgroundPlayer.current;
     if (!video) return;
-    if (!playBackground || teaserOpen || document.hidden) video.pause();
+    if (!playBackground || teaserOpen || fullFilmOpen || document.hidden) video.pause();
     else void video.play().catch(() => { /* Autoplay may be blocked; retain the poster fallback. */ });
-  }, [playBackground, teaserOpen]);
+  }, [playBackground, teaserOpen, fullFilmOpen]);
 
   useEffect(() => {
     const syncVisibility = () => {
       const video = backgroundPlayer.current;
       if (!video) return;
-      if (document.hidden || teaserOpen || !playBackground) video.pause();
+      if (document.hidden || teaserOpen || fullFilmOpen || !playBackground) video.pause();
       else void video.play().catch(() => { /* Leave static artwork visible if autoplay fails. */ });
     };
     document.addEventListener('visibilitychange', syncVisibility);
     return () => document.removeEventListener('visibilitychange', syncVisibility);
-  }, [teaserOpen, playBackground]);
+  }, [teaserOpen, fullFilmOpen, playBackground]);
 
   function announce(value: string) {
     setNotice(value);
@@ -126,11 +105,14 @@ export default function FilmPage() {
     dialog.current?.close();
     setTeaserOpen(false);
   }
+  function openFullFilm() { fullFilmDialog.current?.showModal(); setFullFilmOpen(true); }
+  function closeFullFilm() { fullFilmDialog.current?.close(); setFullFilmOpen(false); }
+
   async function shareFilm() {
     const url = `${window.location.origin}${THE_DARK_DIDNT_WIN.path}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: THE_DARK_DIDNT_WIN.title, text: 'Free online premiere on 20 November 2026 at 3 PM WAT', url });
+        await navigator.share({ title: THE_DARK_DIDNT_WIN.title, text: 'Free online premiere on ' + premiere.day + ' at ' + premiere.time, url });
         return;
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') return;
@@ -190,7 +172,7 @@ export default function FilmPage() {
           <p className="film-subtitle">Free online premiere</p>
           <div className="film-release">
             <time dateTime={THE_DARK_DIDNT_WIN.premiereISO}>
-              Friday, 20 November 2026 <span>3:00 PM WAT</span>
+              {premiere.day} <span>{premiere.time}</span>
             </time>
           </div>
           {!remaining.released ? (
@@ -208,12 +190,16 @@ export default function FilmPage() {
 
           <div className="film-actions">
             {isAvailable ? (
-              <a className="film-primary" href={fullFilmUrl} target="_blank" rel="noopener noreferrer"><Play size={15} fill="currentColor" aria-hidden="true" /> Watch film</a>
+              embeddedFilmUrl ? (
+                <button type="button" className="film-primary" onClick={openFullFilm}><Play size={15} fill="currentColor" aria-hidden="true" /> Watch film</button>
+              ) : (
+                <a className="film-primary" href={fullFilmUrl} target="_blank" rel="noopener noreferrer"><Play size={15} fill="currentColor" aria-hidden="true" /> Watch film</a>
+              )
             ) : (
               <button type="button" className="film-primary" onClick={openTeaser}><Play size={15} fill="currentColor" aria-hidden="true" /> Watch teaser</button>
             )}
             {!remaining.released && (
-              <a className="film-reminder" href={calendarReminderUrl()} target="_blank" rel="noopener noreferrer" aria-label="Set a premiere reminder in Google Calendar. Tap Save to confirm." title="Opens Google Calendar; tap Save to confirm"><CalendarDays size={16} aria-hidden="true" strokeWidth={1.5} /> Set reminder</a>
+              <a className="film-reminder" href={createCalendarReminderUrl(window.location.origin)} target="_blank" rel="noopener noreferrer" aria-label="Set a premiere reminder in Google Calendar. Tap Save to confirm." title="Opens Google Calendar; tap Save to confirm"><CalendarDays size={16} aria-hidden="true" strokeWidth={1.5} /> Set reminder</a>
             )}
           </div>
         </section>
@@ -225,6 +211,10 @@ export default function FilmPage() {
           <source src={THE_DARK_DIDNT_WIN.teaser} type="video/mp4"/>
           Your browser does not support video playback.
         </video>
+      </dialog>
+      <dialog ref={fullFilmDialog} className="film-dialog" aria-label="Watch The Dark Didn\'t Win" onClose={() => setFullFilmOpen(false)} onClick={event => { if (event.target === fullFilmDialog.current) closeFullFilm(); }}>
+        <div className="film-dialog-header"><span>The Dark Didn\'t Win</span><button type="button" onClick={closeFullFilm} aria-label="Close film"><X size={20}/></button></div>
+        {fullFilmOpen && embeddedFilmUrl && <iframe className="film-embedded-player" src={embeddedFilmUrl} title="The Dark Didn\'t Win — full film" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen/>}
       </dialog>
       <div className={`film-toast${notice ? ' film-toast-visible' : ''}`} role="status" aria-live="polite">{notice}</div>
     </main>
