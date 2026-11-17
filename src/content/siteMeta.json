@@ -1,32 +1,32 @@
 {
   "/": {
     "title": "CMEI | Creative Media Empowerment Initiative",
-    "description": "CMEI supports emerging creatives through hands-on media training, mentorship and storytelling.",
+    "description": "CMEI helps young creators learn photography, filmmaking and storytelling through hands-on training and support.",
     "image": "/cmei-logo.png"
   },
   "/about": {
     "title": "About CMEI | Creative Media Empowerment Initiative",
-    "description": "Learn why Creative Media Empowerment Initiative exists, its practice-first pathway, mission, vision, values and people.",
+    "description": "Learn why CMEI exists, what we believe, and the people helping young creators grow.",
     "image": "/cmei-logo.png"
   },
   "/approach": {
     "title": "What We Do | CMEI",
-    "description": "Explore CMEI's practical approach to photography, filmmaking, storytelling and professional development.",
+    "description": "See how CMEI helps new photographers, filmmakers and storytellers learn by doing.",
     "image": "/cmei-logo.png"
   },
   "/work": {
     "title": "Our Work | CMEI",
-    "description": "Explore attributed creative work associated with CMEI, including The Dark Didn't Win, a Creddy Production.",
+    "description": "Discover films and creative work connected to CMEI, including The Dark Didn't Win, a Creddy Production.",
     "image": "/films/the-dark-didnt-win/official-poster.webp"
   },
   "/films": {
     "title": "CMEI Films | Independent Stories",
-    "description": "Discover films and creative work associated with the CMEI community, including The Dark Didn't Win.",
+    "description": "Explore films made by creative people connected to CMEI.",
     "image": "/films/the-dark-didnt-win/official-poster.webp"
   },
   "/partner": {
     "title": "Partner with CMEI | Support Emerging Creatives",
-    "description": "Partner with CMEI to support accessible creative-media training, equipment, mentorship and pathways to opportunity.",
+    "description": "Support CMEI and help more young creators learn, make work and find opportunities.",
     "image": "/cmei-logo.png"
   },
   "/films/the-dark-didnt-win": {

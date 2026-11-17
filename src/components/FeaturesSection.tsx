@@ -34,7 +34,7 @@ export default function FeaturesSection() {
             <p className="mb-3 text-[10px] font-semibold uppercase tracking-[.2em] text-white/70 lg:mb-5">Our approach</p>
             <h2 className="max-w-md text-3xl leading-[1.15] tracking-tight sm:text-4xl lg:text-[42px]">
               <span className="lg:hidden">What we do.</span>
-              <span className="hidden lg:inline">A creative journey, from first idea to work that speaks.</span>
+              <span className="hidden lg:inline">Learn it. Make it. Share it.</span>
             </h2>
           </div>
           <div className="mt-8 hidden flex-col items-start gap-2 lg:flex">

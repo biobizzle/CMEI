@@ -6,13 +6,13 @@ import {cmeiAbout} from '../src/content/about.ts';
 const read=(file:string)=>readFileSync(file,'utf8');
 
 test('About page honours the July 2026 CMEI business plan',()=>{
-  assert.match(cmeiAbout.purpose,/creative interest and real opportunity/i);
+  assert.match(cmeiAbout.purpose,/turn an interest in photography, filmmaking and storytelling into skills/i);
   assert.match(cmeiAbout.mission,/employment, entrepreneurship and community contribution/i);
   assert.match(cmeiAbout.vision,/positive change through visual storytelling/i);
   assert.equal(cmeiAbout.values.length,5);
   assert.equal(cmeiAbout.pathway.length,3);
-  assert.match(cmeiAbout.pilot,/proposed first initiative/i);
-  assert.match(cmeiAbout.pilot,/20–30/);
+  assert.match(cmeiAbout.pilot,/first training programme is being planned/i);
+  assert.match(cmeiAbout.pilot,/application details when they're confirmed/i);
   const ui=read('src/components/AboutSection.tsx');
   assert.match(ui,/cmeiAbout\.mission/);
   assert.match(ui,/cmeiAbout\.vision/);
@@ -33,7 +33,7 @@ test('Work and Films are distinct pages with truthful production attribution',()
   const routes=read('src/pages/StandardPages.tsx');
   assert.match(work,/Creddy Production/);
   assert.match(work,/convener of CMEI/);
-  assert.match(work,/appropriate permission/);
+  assert.match(work,/permission and proper credit/);
   assert.match(routes,/WorkPage\(\)\{return <WorkPortfolio\/>/);
   assert.match(routes,/FilmsPage\(\)/);
   assert.match(routes,/showCollectionLink=\{false\}/);

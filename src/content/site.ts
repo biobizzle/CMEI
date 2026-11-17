@@ -11,19 +11,19 @@ export const navigation = [
 export const features = [
   {
     title: 'Learn the craft',
-    description: 'Practical photography, filmmaking and digital production skills.',
+    description: 'Learn photography, filming and editing by trying them yourself.',
     image: '/images/learn.webp',
     alt: 'A photographer learning with a mentor',
   },
   {
     title: 'Tell the story',
-    description: 'Create thoughtful work about real people and ideas.',
+    description: 'Turn people, places and ideas into stories worth telling.',
     image: '/images/story.webp',
     alt: 'A filmmaker recording a conversation',
   },
   {
     title: 'Build your path',
-    description: 'Develop a portfolio and connect with creative mentors.',
+    description: 'Collect your best work and learn from experienced creators.',
     image: '/images/path.webp',
     alt: 'Creatives reviewing a portfolio together',
   },

@@ -19,3 +19,16 @@ This repository is the Creative Media Empowerment Initiative's organisation webs
 - `npm run build` runs tests, TypeScript and Vite.
 - Before merging, check mobile layouts at 320px, 375px, 430px and desktop; verify keyboard/tab order, screen reader labels, reduced motion, and low-network fallback.
 - Do not invent credits, programmes, sponsors, assets or a YouTube watch link.
+
+## Public writing and page-by-page editing rules
+
+Every visitor-facing page must speak plainly, avoiding technical, internal-planning and donor-report jargon. Do not display decorative numbers on pathway, value or partnership cards. Use descriptive titles and short explanations instead.
+
+- Home: preserve the approved hero presentation; the What We Do copy should describe actual activities.
+- About: use the official CMEI plan as the factual source. Keep the official mission and vision, but write other descriptions in straightforward language. Do not use numbered cards or unverified success claims.
+- What We Do: describe photography, filmmaking, learning and mentorship in everyday terms.
+- Partner: show useful ways to help and link directly to enquiry; avoid grant-proposal phrasing and numeric card badges.
+- Work: explain the actual films and their creators without speaking as though projects have already been completed.
+- Films: keep official film credits and release information accurate.
+- Film page: preserve the approved cinematic layout, accessible countdown, date and working trailer/viewing controls. These numbers are functional, not decorative.
+- Keep internal technical documentation and implementation identifiers intact; the restriction applies to what visitors see.
