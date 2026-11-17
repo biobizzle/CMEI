@@ -25,7 +25,7 @@ export default function PartnerContent() {
         <aside className="rounded-[18px] border border-[#321c04]/20 p-5 md:p-7">
           <p className="text-[10px] font-semibold uppercase tracking-[.18em]">Our first planned programme</p>
           <p className="mt-3 font-serif text-2xl leading-[1.2] tracking-tight md:text-3xl">A week of hands-on learning.</p>
-          <p className="mt-3 text-sm leading-[1.65] text-[#321c04]/75">We're preparing training in photography, video and storytelling. Dates and applications will be announced when confirmed.</p>
+          <p className="mt-3 text-sm leading-[1.65] text-[#321c04]/75">We are preparing training in photography, video and storytelling. Dates and applications will be announced when confirmed.</p>
         </aside>
       </div>
     </section>

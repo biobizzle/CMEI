@@ -24,5 +24,5 @@ export const cmeiAbout = {
     { title: 'Proof over promises', detail: 'Let the work speak, and be clear about what has been achieved.' },
     { title: 'Community multiplies talent', detail: 'Connect creators, mentors and partners.' },
   ],
-  pilot: 'Our first training programme is being planned. It will bring young creators together to learn photography, video, storytelling and how to turn their skills into work. We'll share dates and application details when they're confirmed.',
+  pilot: "Our first training programme is being planned. It will bring young creators together to learn photography, video, storytelling and how to turn their skills into work. We'll share dates and application details when they're confirmed.",
 } as const;
